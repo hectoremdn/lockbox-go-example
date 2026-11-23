@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LockBox GO: Smart Lockers - Aplicaciones en Google Play</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --play-green: #01875f;
+      --play-green-hover: #016e4d;
+      --play-green-tint: #e6f4ea;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --border-color: #dadce0;
+      --surface: #ffffff;
+      --surface-alt: #f8f9fa;
+      --brand-magenta: #ff007f;
+      --brand-orange: #ff6b2b;
+      --brand-dark: #141124;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--surface);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header estilo Play Store */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #eceef0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .play-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 21px;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      padding: 20px 0;
+      border-bottom: 3px solid transparent;
+    }
+
+    .nav-links a.active {
+      color: var(--play-green);
+      border-bottom-color: var(--play-green);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--text-secondary);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--brand-magenta), var(--brand-orange));
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    /* Cabecera de la app */
+    .app-hero {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .app-icon-box {
+      width: 96px;
+      height: 96px;
+      min-width: 96px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #1b102d 0%, #2d1441 55%, #5c1949 100%);
+      box-shadow: 0 4px 14px rgba(20, 17, 36, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-icon-box::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 85%, rgba(255, 107, 43, 0.35), transparent 60%);
+      pointer-events: none;
+    }
+
+    .app-icon-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+    }
+
+    .app-title-block h1 {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .developer-name {
+      color: var(--play-green);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .verified-badge {
+      width: 15px;
+      height: 15px;
+      fill: var(--play-green);
+    }
+
+    .app-submeta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Métricas horizontales */
+    .stats-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 22px 0 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .stats-row::-webkit-scrollbar { display: none; }
+
+    .stat-item {
+      padding: 0 22px;
+      text-align: center;
+      border-right: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .stat-item:first-child { padding-left: 0; }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 22px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .pegi-badge {
+      display: inline-block;
+      border: 1.5px solid var(--text-primary);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0 4px;
+      line-height: 16px;
+      border-radius: 2px;
+    }
+
+    /* Botones de acción */
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .btn-primary {
+      background-color: var(--play-green);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 44px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      min-width: 190px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover { background-color: var(--play-green-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-primary.installing {
+      background-color: var(--play-green-tint);
+      color: var(--play-green);
+      cursor: default;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--play-green);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: none;
+    }
+
+    .btn-outline:hover { background: var(--surface-alt); }
+
+    .btn-icon-text {
+      background: none;
+      border: none;
+      color: var(--play-green);
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-icon-text:hover { background: var(--play-green-tint); }
+
+    .device-compat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    /* Barra de progreso al instalar */
+    .install-progress-wrap {
+      display: none;
+      max-width: 340px;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-bg {
+      height: 5px;
+      background: #e0e0e0;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--play-green);
+      transition: width 0.2s ease;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Carrusel de capturas (mockups CSS) */
+    .screenshots-track {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 6px 2px 16px;
+      margin-bottom: 28px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .screenshots-track::-webkit-scrollbar { height: 6px; }
+    .screenshots-track::-webkit-scrollbar-thumb {
+      background: #dadce0;
+      border-radius: 99px;
+    }
+
+    .screen-card {
+      flex: 0 0 215px;
+      height: 390px;
+      border-radius: 16px;
+      padding: 20px 16px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      scroll-snap-align: start;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .screen-1 { background: linear-gradient(160deg, #4b1d70 0%, #c82b78 52%, #ff8243 100%); }
+    .screen-2 { background: linear-gradient(160deg, #12101f 0%, #26163a 60%, #4d194d 100%); }
+    .screen-3 { background: linear-gradient(160deg, #1d1633 0%, #2f1b4c 55%, #b8296f 100%); }
+    .screen-4 { background: linear-gradient(160deg, #101422 0%, #1d2642 60%, #01875f 100%); }
+
+    .screen-tag {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 4px 9px;
+      border-radius: 99px;
+      align-self: flex-start;
+      backdrop-filter: blur(4px);
+    }
+
+    .screen-title {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-top: 12px;
+    }
+
+    .screen-sub {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 6px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 400;
+    }
+
+    .mini-ui-box {
+      background: rgba(15, 12, 28, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      padding: 12px;
+      backdrop-filter: blur(6px);
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .mini-price {
+      font-size: 22px;
+      font-weight: 800;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .mini-pill {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--brand-dark);
+      font-weight: 700;
+    }
+
+    /* Layout inferior de dos columnas en escritorio */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      gap: 44px;
+    }
+
+    .section {
+      margin-bottom: 34px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .about-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: pre-line;
+    }
+
+    .about-extra {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .about-extra.open { display: block; }
+
+    .read-more-btn {
+      background: none;
+      border: none;
+      color: var(--play-green);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+      padding: 0;
+    }
+
+    .updated-row {
+      margin-top: 18px;
+      font-size: 13px;
+    }
+
+    .updated-row strong {
+      display: block;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .updated-row span { color: var(--text-secondary); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Tarjeta de tarifas / compras integradas */
+    .pricing-card {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      background: var(--surface-alt);
+    }
+
+    .price-tier {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #e8eaed;
+    }
+
+    .price-tier:last-child { border-bottom: none; padding-bottom: 0; }
+    .price-tier:first-child { padding-top: 0; }
+
+    .tier-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .tier-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .tier-badge {
+      background: var(--play-green-tint);
+      color: var(--play-green);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .tier-badge.pro {
+      background: linear-gradient(135deg, var(--brand-magenta), var(--brand-orange));
+      color: #fff;
+    }
+
+    /* Seguridad de los datos */
+    .safety-box {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .safety-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .safety-row strong {
+      display: block;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    /* Valoraciones */
+    .ratings-summary {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .big-score {
+      font-size: 54px;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .stars-green {
+      color: var(--play-green);
+      font-size: 16px;
+      letter-spacing: 1px;
+      margin: 6px 0 4px;
+    }
+
+    .rating-bars { flex: 1; }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .bar-bg {
+      flex: 1;
+      height: 8px;
+      background: #e8eaed;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--play-green);
+      border-radius: 99px;
+    }
+
+    .review {
+      padding: 16px 0;
+      border-top: 1px solid #f1f3f4;
+    }
+
+    .review-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .review-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      display: grid;
+      place-items: center;
+    }
+
+    .review-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .review-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Barra lateral (Información adicional) */
+    .sidebar-card {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-card h3 {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f3f4;
+      gap: 12px;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--text-secondary); }
+    .info-row span:last-child { color: var(--text-primary); text-align: right; font-weight: 500; }
+
+    /* Modal simulado al pulsar "Abrir" */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal-card {
+      background: #141124;
+      color: #fff;
+      max-width: 380px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 28px 24px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .modal-card h3 { font-size: 21px; margin-bottom: 8px; }
+    .modal-card p { font-size: 14px; color: #c7c4d6; margin-bottom: 20px; font-family: 'Roboto', sans-serif; }
+
+    .modal-close {
+      background: linear-gradient(135deg, var(--brand-magenta), var(--brand-orange));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #323232;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      transition: transform 0.25s ease;
+      z-index: 300;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    footer {
+      border-top: 1px solid #eceef0;
+      padding: 24px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 820px) {
+      .nav-links { display: none; }
+      .content-grid { grid-template-columns: 1fr; gap: 24px; }
+      .app-title-block h1 { font-size: 24px; }
+      .app-icon-box { width: 76px; height: 76px; min-width: 76px; border-radius: 18px; }
+      .btn-primary { width: 100%; }
+      .cta-row { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="#" class="play-brand">
+        <svg width="26" height="26" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M3.6 2.4c-.4.4-.6 1-.6 1.8v15.6c0 .8.2 1.4.6 1.8l.1.1 8.8-8.8v-.2L3.7 2.3l-.1.1z"/>
+          <path fill="#FBBC04" d="M15.4 15.8l-2.9-2.9v-.2l2.9-2.9.1.1 3.5 2c1 .6 1 1.5 0 2.1l-3.5 2-.1-.2z"/>
+          <path fill="#EA4335" d="M15.5 15.7L12.5 12.7 3.6 21.6c.3.4.9.4 1.6 0l10.3-5.9z"/>
+          <path fill="#34A853" d="M15.5 8.3L5.2 2.4c-.7-.4-1.3-.3-1.6 0l8.9 8.9 3-3z"/>
+        </svg>
+        <span>Google Play</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#">Juegos</a>
+        <a href="#" class="active">Apps</a>
+        <a href="#">Libros</a>
+        <a href="#">Niños</a>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <div class="avatar">H</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero de la App -->
+    <section class="app-hero">
+      <div class="app-icon-box">
+        <!-- Coloca LockBoxGO-logo-512x512.png en la misma carpeta -->
+        <img
+          src="LockBoxGO-logo-512x512.png"
+          alt="Logo de LockBox GO"
+          onerror="this.style.display='none'; document.getElementById('svg-fallback').style.display='block';"
+        />
+        <svg id="svg-fallback" style="display:none; width:64px; height:64px;" viewBox="0 0 64 64" fill="none">
+          <path d="M35 8L18 30C15 34 17 40 22 41L29 42L45 21C48 17 45 12 40 13L25 32" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 42C15 47 18 54 25 54H38C45 54 49 46 44 41L36 39L26 51" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="app-title-block">
+        <h1>LockBox GO: Smart Lockers</h1>
+        <a href="#info" class="developer-name">
+          LockBoxGO™
+          <svg class="verified-badge" viewBox="0 0 24 24">
+            <path d="M12 2L9.8 4.2 6.8 3.6 6 6.6 3.2 7.8 4.2 10.8 2.4 13.2 4.6 15.4 4.2 18.4 7.2 19 8.6 21.8 11.6 20.8 14.4 22 16.4 19.6 19.4 19.8 19.8 16.8 22.4 15.2 21.2 12.4 22.8 9.8 20.4 7.8 20.6 4.8 17.6 4.4 16 1.8 13.2 3 12 2zm-1.2 13.8l-3.4-3.4 1.4-1.4 2 2 4.8-4.8 1.4 1.4-6.2 6.2z"/>
+          </svg>
+        </a>
+        <div class="app-submeta">Compras dentro de la aplicación · Sin anuncios</div>
+      </div>
+    </section>
+
+    <!-- Métricas -->
+    <section class="stats-row">
+      <div class="stat-item">
+        <div class="stat-value">4,9 ★</div>
+        <div class="stat-label">12,4 mil reseñas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">50 mil+</div>
+        <div class="stat-label">Descargas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value"><span class="pegi-badge">3</span></div>
+        <div class="stat-label">PEGI 3</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">18 MB</div>
+        <div class="stat-label">Tamaño</div>
+      </div>
+    </section>
+
+    <!-- Barra de progreso de instalación -->
+    <div class="install-progress-wrap" id="progressWrap">
+      <div class="progress-text" id="progressText">Pendiente...</div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Botones CTA -->
+    <section class="cta-row">
+      <button class="btn-primary" id="installBtn">Obtener</button>
+      <button class="btn-outline" id="uninstallBtn">Desinstalar</button>
+
+      <button class="btn-icon-text" id="shareBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+        </svg>
+        Compartir
+      </button>
+
+      <button class="btn-icon-text" id="wishBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+        </svg>
+        <span id="wishText">Añadir a la lista de deseos</span>
+      </button>
+    </section>
+
+    <div class="device-compat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+      </svg>
+      <span>Esta aplicación está disponible para todos tus dispositivos Android e iOS.</span>
+    </div>
+
+    <!-- Carrusel de capturas promocionales -->
+    <section class="screenshots-track" aria-label="Capturas de pantalla de la app">
+      <div class="screen-card screen-1">
+        <div>
+          <span class="screen-tag">Zaragoza 24/7</span>
+          <div class="screen-title">Tu botín a buen recaudo</div>
+          <div class="screen-sub">Recoge tus pedidos más esperados sin colas ni entregas fallidas.</div>
+        </div>
+        <div class="mini-ui-box">
+          <div style="font-size:11px; opacity:.8;">Taquilla #ZAZ-042 · Activa</div>
+          <div style="font-size:14px; font-weight:700; margin-top:4px;">Paquete listo para recoger</div>
+          <span class="mini-pill">Abrir por Bluetooth</span>
+        </div>
+      </div>
+
+      <div class="screen-card screen-2">
+        <div>
+          <span class="screen-tag">Sin llaves</span>
+          <div class="screen-title">Abre en 1 segundo con QR o BLE</div>
+          <div class="screen-sub">Acércate al locker y desbloquéalo directamente desde tu móvil.</div>
+        </div>
+        <div class="mini-ui-box" style="text-align:center;">
+          <div style="font-size:28px;">🔓</div>
+          <div style="font-size:13px; font-weight:700; margin-top:4px;">Puerta 03 desbloqueada</div>
+          <div style="font-size:11px; opacity:.75;">Cifrado AES-256 activo</div>
+        </div>
+      </div>
+
+      <div class="screen-card screen-3">
+        <div>
+          <span class="screen-tag">Precios claros</span>
+          <div class="screen-title">Paga solo por lo que usas</div>
+          <div class="screen-sub">Sin permanencias. Pásate a PRO cuando quieras.</div>
+        </div>
+        <div class="mini-ui-box">
+          <div style="font-size:11px; opacity:.8;">Alquiler puntual</div>
+          <div class="mini-price">0,99 € <span style="font-size:12px; font-weight:400;">/ hora</span></div>
+          <div style="border-top:1px solid rgba(255,255,255,.15); margin:8px 0;"></div>
+          <div style="font-size:11px; opacity:.8;">Suscripción LockBox PRO</div>
+          <div class="mini-price">4,00 € <span style="font-size:12px; font-weight:400;">/ mes</span></div>
+        </div>
+      </div>
+
+      <div class="screen-card screen-4">
+        <div>
+          <span class="screen-tag">Comparte seguro</span>
+          <div class="screen-title">Intercambia llaves o paquetes</div>
+          <div class="screen-sub">Envía un código QR temporal a un amigo y recíbelo al instante.</div>
+        </div>
+        <div class="mini-ui-box">
+          <div style="font-size:11px; opacity:.8;">Acceso temporal generado</div>
+          <div style="font-size:15px; font-weight:700; letter-spacing:2px; margin-top:4px;">LBG-8492</div>
+          <div style="font-size:11px; color:#81c995; margin-top:4px;">● Válido durante 4 horas</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contenido principal + Sidebar -->
+    <div class="content-grid">
+      <div>
+        <!-- Acerca de esta app -->
+        <section class="section">
+          <div class="section-header">
+            <h2>Acerca de esta aplicación</h2>
+          </div>
+          <p class="about-text"><strong>LockBox GO</strong> convierte la ciudad en tu espacio personal seguro. Localiza taquillas inteligentes (smart lockers) disponibles 24/7 en Zaragoza, reserva al instante desde el móvil y abre tu compartimento sin llaves mediante Bluetooth (BLE) o código QR.
+
+Ideal para recibir tus compras online y lanzamientos más esperados sin miedo a no estar en casa cuando pase el repartidor, guardar tu mochila o portátil mientras estás en clase o en el gimnasio, e intercambiar objetos de forma 100% segura.</p>
+
+          <div class="about-extra" id="aboutExtra">
+            <p class="about-text"><strong>¿Qué puedes hacer con LockBox GO?</strong>
+• <strong>Recogida blindada 24/7:</strong> Envía tus paquetes a tu taquilla más cercana y recógelos a cualquier hora.
+• <strong>Apertura instantánea:</strong> Desbloqueo sin contacto por Bluetooth o escaneando el código QR.
+• <strong>Intercambios seguros:</strong> Comparte un código de un solo uso con amigos o compradores para dejar o recoger llaves y objetos.
+• <strong>Tarifas flexibles:</strong> Usa el servicio puntualmente desde <strong>0,99 €/hora</strong> o activa <strong>LockBox GO PRO por 4,00 €/mes</strong> con reservas ilimitadas y prioridad en fechas de alta demanda.</p>
+          </div>
+          <button class="read-more-btn" id="readMoreBtn">Leer más</button>
+
+          <div class="updated-row">
+            <strong>Actualizada el</strong>
+            <span>20 nov 2026</span>
+          </div>
+
+          <div class="chips">
+            <span class="chip">Productividad</span>
+            <span class="chip">Smart Lockers</span>
+            <span class="chip">Logística urbana</span>
+            <span class="chip">Sin anuncios</span>
+          </div>
+        </section>
+
+        <!-- Compras dentro de la app -->
+        <section class="section">
+          <div class="section-header">
+            <h2>Compras dentro de la aplicación</h2>
+          </div>
+          <div class="pricing-card">
+            <div class="price-tier">
+              <div>
+                <div class="tier-name">Alquiler Taquilla Estándar (Pago por uso)</div>
+                <div class="tier-desc">Reserva inmediata por horas con apertura QR y Bluetooth.</div>
+              </div>
+              <span class="tier-badge">0,99 € / hora</span>
+            </div>
+            <div class="price-tier">
+              <div>
+                <div class="tier-name">LockBox GO PRO (Suscripción mensual)</div>
+                <div class="tier-desc">Reservas ilimitadas 24/7, taquillas XL y prioridad en lanzamientos.</div>
+              </div>
+              <span class="tier-badge pro">4,00 € / mes</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seguridad de los datos -->
+        <section class="section">
+          <div class="section-header">
+            <h2>Seguridad de los datos</h2>
+          </div>
+          <p class="about-text">La seguridad empieza por entender cómo recogen y comparten tus datos los desarrolladores. LockBoxGO™ aplica cifrado de extremo a extremo en cada apertura de taquilla.</p>
+          <div class="safety-box">
+            <div class="safety-row">
+              <span>🔒</span>
+              <div>
+                <strong>No se comparten datos con terceros</strong>
+                Tus ubicaciones y reservas nunca se venden ni comparten con anunciantes.
+              </div>
+            </div>
+            <div class="safety-row">
+              <span>🛡️</span>
+              <div>
+                <strong>Datos cifrados en tránsito</strong>
+                La comunicación Bluetooth (BLE) y los códigos QR temporales utilizan cifrado dinámico.
+              </div>
+            </div>
+            <div class="safety-row">
+              <span>🗑️</span>
+              <div>
+                <strong>Puedes solicitar que se eliminen los datos</strong>
+                Control total de tu cuenta e historial desde los ajustes de la app.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Valoraciones y reseñas -->
+        <section class="section">
+          <div class="section-header">
+            <h2>Valoraciones y reseñas</h2>
+          </div>
+
+          <div class="ratings-summary">
+            <div>
+              <div class="big-score">4,9</div>
+              <div class="stars-green">★★★★★</div>
+              <div class="stat-label">12.430 valoraciones</div>
+            </div>
+            <div class="rating-bars">
+              <div class="bar-row"><span>5</span><div class="bar-bg"><div class="bar-fill" style="width:91%"></div></div></div>
+              <div class="bar-row"><span>4</span><div class="bar-bg"><div class="bar-fill" style="width:7%"></div></div></div>
+              <div class="bar-row"><span>3</span><div class="bar-bg"><div class="bar-fill" style="width:1.5%"></div></div></div>
+              <div class="bar-row"><span>2</span><div class="bar-bg"><div class="bar-fill" style="width:0.3%"></div></div></div>
+              <div class="bar-row"><span>1</span><div class="bar-bg"><div class="bar-fill" style="width:0.2%"></div></div></div>
+            </div>
+          </div>
+
+          <article class="review">
+            <div class="review-user">
+              <div class="review-avatar" style="background:#5c6bc0;">M</div>
+              <strong>Marcos R.</strong>
+            </div>
+            <div class="review-meta">
+              <span style="color:var(--play-green);">★★★★★</span>
+              <span>18 de noviembre de 2026</span>
+            </div>
+            <p class="review-text">Brutal. Pedí una edición coleccionista que llevaba años esperando y como estaba en clase lo mandé directo a una taquilla LockBox GO en el centro. Llegué a las 21:30, escaneé el QR y en dos segundos abierta. Por 0,99 € merece muchísimo la pena.</p>
+          </article>
+
+          <article class="review">
+            <div class="review-user">
+              <div class="review-avatar" style="background:#ec407a;">L</div>
+              <strong>Lucía V.</strong>
+            </div>
+            <div class="review-meta">
+              <span style="color:var(--play-green);">★★★★★</span>
+              <span>12 de noviembre de 2026</span>
+            </div>
+            <p class="review-text">Tengo el plan PRO por 4,00 € al mes y lo uso casi todos los días para dejar la bolsa del gimnasio antes de ir a estudiar. La interfaz es rapidísima y el Bluetooth no falla nunca.</p>
+          </article>
+
+          <article class="review">
+            <div class="review-user">
+              <div class="review-avatar" style="background:#26a69a;">J</div>
+              <strong>Javier M.</strong>
+            </div>
+            <div class="review-meta">
+              <span style="color:var(--play-green);">★★★★★</span>
+              <span>5 de noviembre de 2026</span>
+            </div>
+            <p class="review-text">Súper práctica para dejarle unas llaves a un compañero de piso sin tener que cuadrar horarios. Ojalá pongan todavía más puntos en Zaragoza.</p>
+          </article>
+        </section>
+      </div>
+
+      <!-- Barra lateral -->
+      <aside id="info">
+        <div class="sidebar-card">
+          <h3>Novedades</h3>
+          <p class="about-text">• Nuevo modo de reserva anticipada para lanzamientos de alta demanda.<br>• Apertura por Bluetooth (BLE) un 40% más rápida.<br>• Mejoras de rendimiento y nuevo diseño visual.</p>
+        </div>
+
+        <div class="sidebar-card">
+          <h3>Información de la aplicación</h3>
+          <div class="info-row"><span>Versión</span><span>2.6.0</span></div>
+          <div class="info-row"><span>Actualizada el</span><span>20 nov 2026</span></div>
+          <div class="info-row"><span>Requiere Android</span><span>8.0 y versiones posteriores</span></div>
+          <div class="info-row"><span>Descargas</span><span>Más de 50.000</span></div>
+          <div class="info-row"><span>Compras integradas</span><span>0,99 € – 4,00 € / elemento</span></div>
+          <div class="info-row"><span>Clasificación</span><span>PEGI 3</span></div>
+          <div class="info-row"><span>Ofrecida por</span><span>LockBoxGO™</span></div>
+          <div class="info-row"><span>Sede</span><span>Zaragoza, España</span></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Modal interactivo al abrir la app -->
+  <div class="modal-overlay" id="appModal">
+    <div class="modal-card">
+      <div style="font-size:38px; margin-bottom:10px;">🚀</div>
+      <h3>¡Bienvenido a LockBox GO!</h3>
+      <p>Tu app se ha instalado correctamente. Reserva tu primera taquilla inteligente en Zaragoza desde <strong>0,99 €/hora</strong> o activa <strong>PRO (4,00 €/mes)</strong>.</p>
+      <button class="modal-close" id="closeModal">Explorar taquillas cercanas</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <footer>
+    © 2026 LockBoxGO™ · Simulación de tienda de aplicaciones para proyecto IPE II (DAM)
+  </footer>
+
+  <script>
+    const installBtn = document.getElementById('installBtn');
+    const uninstallBtn = document.getElementById('uninstallBtn');
+    const progressWrap = document.getElementById('progressWrap');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const appModal = document.getElementById('appModal');
+    const closeModal = document.getElementById('closeModal');
+    const readMoreBtn = document.getElementById('readMoreBtn');
+    const aboutExtra = document.getElementById('aboutExtra');
+    const shareBtn = document.getElementById('shareBtn');
+    const wishBtn = document.getElementById('wishBtn');
+    const wishText = document.getElementById('wishText');
+    const toast = document.getElementById('toast');
+
+    let state = 'idle'; // idle | installing | installed
+    let wished = false;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    installBtn.addEventListener('click', () => {
+      if (state === 'idle') {
+        state = 'installing';
+        installBtn.classList.add('installing');
+        installBtn.textContent = 'Cancelando...';
+        installBtn.textContent = 'Descargando...';
+        progressWrap.style.display = 'block';
+
+        let pct = 0;
+        const timer = setInterval(() => {
+          pct += Math.floor(Math.random() * 18) + 10;
+          if (pct >= 100) {
+            pct = 100;
+            clearInterval(timer);
+            progressFill.style.width = '100%';
+            progressText.textContent = 'Instalando LockBox GO...';
+            setTimeout(() => {
+              state = 'installed';
+              progressWrap.style.display = 'none';
+              installBtn.classList.remove('installing');
+              installBtn.textContent = 'Abrir';
+              uninstallBtn.style.display = 'inline-block';
+              showToast('LockBox GO se ha instalado correctamente');
+            }, 650);
+          } else {
+            progressFill.style.width = pct + '%';
+            progressText.textContent = `${pct}% de 18 MB`;
+          }
+        }, 220);
+      } else if (state === 'installed') {
+        // Si quieres hacer la broma en clase al pulsar "Abrir", descomenta la línea siguiente:
+        // window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+        appModal.classList.add('show');
+      }
+    });
+
+    uninstallBtn.addEventListener('click', () => {
+      state = 'idle';
+      uninstallBtn.style.display = 'none';
+      installBtn.textContent = 'Obtener';
+      progressFill.style.width = '0%';
+      showToast('Aplicación desinstalada');
+    });
+
+    closeModal.addEventListener('click', () => appModal.classList.remove('show'));
+    appModal.addEventListener('click', (e) => {
+      if (e.target === appModal) appModal.classList.remove('show');
+    });
+
+    readMoreBtn.addEventListener('click', () => {
+      const open = aboutExtra.classList.toggle('open');
+      readMoreBtn.textContent = open ? 'Mostrar menos' : 'Leer más';
+    });
+
+    shareBtn.addEventListener('click', () => {
+      if (navigator.clipboard) navigator.clipboard.writeText(window.location.href).catch(() => {});
+      showToast('Enlace de LockBox GO copiado al portapapeles');
+    });
+
+    wishBtn.addEventListener('click', () => {
+      wished = !wished;
+      wishText.textContent = wished ? 'En tu lista de deseos' : 'Añadir a la lista de deseos';
+      showToast(wished ? 'Añadida a tu lista de deseos' : 'Eliminada de tu lista de deseos');
+    });
+  </script>
+</body>
+</html>
